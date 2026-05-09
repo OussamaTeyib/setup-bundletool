@@ -6,33 +6,42 @@ import os from 'os'
 
 async function run(): Promise<void> {
   try {
-    const downloadVersion = '1.15.1/bundletool-all-1.15.1.jar'
+    const downloadVersion = '1.18.3/bundletool-all-1.18.3.jar'
 
     const downloadDir = path.join(os.homedir(), '.bundletool')
     const downloadJarPath = path.join(
       downloadDir,
       downloadVersion.split('/')[1]
     )
-    const bundleToolPath = path.join(downloadDir, 'bundletool')
-
-    await fs.mkdir(downloadDir)
-
-    core.info('start download')
-    await toolCache.downloadTool(
-      `https://github.com/google/bundletool/releases/download/${downloadVersion}`,
-      downloadJarPath
+    const bundleToolPath = path.join(
+      downloadDir,
+      process.platform === 'win32' ? 'bundletool.cmd' : 'bundletool'
     )
-    core.info('end download')
+
+    await fs.mkdir(downloadDir, {recursive: true})
+
+    try {
+      await fs.access(downloadJarPath)
+      core.info('bundletool already downloaded')
+    } catch {
+      core.info('start download')
+      await toolCache.downloadTool(
+        `https://github.com/google/bundletool/releases/download/${downloadVersion}`,
+        downloadJarPath
+      )
+      core.info('end download')
+    }
 
     core.info('start create script')
     await fs.writeFile(
       bundleToolPath,
-      `
-      #!/bin/bash
-      java -jar ${downloadJarPath} "$@"
-    `
+      process.platform === 'win32'
+        ? `@echo off\r\njava -jar "${downloadJarPath}" %*\r\n`
+        : `#!/usr/bin/env bash\njava -jar "${downloadJarPath}" "$@"\n`
     )
-    await fs.chmod(bundleToolPath, '755')
+    if (process.platform !== 'win32') {
+      await fs.chmod(bundleToolPath, '755')
+    }
     core.info('end create script')
 
     core.info('start add path')
