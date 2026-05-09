@@ -6,7 +6,8 @@ import os from 'os'
 
 async function run(): Promise<void> {
   try {
-    const downloadVersion = '1.15.1/bundletool-all-1.15.1.jar'
+    const version = core.getInput('version')
+    const downloadVersion = `${version}/bundletool-all-${version}.jar`
 
     const downloadDir = path.join(os.homedir(), '.bundletool')
     const downloadJarPath = path.join(
@@ -15,7 +16,7 @@ async function run(): Promise<void> {
     )
     const bundleToolPath = path.join(downloadDir, 'bundletool')
 
-    await fs.mkdir(downloadDir)
+    await fs.mkdir(downloadDir, { recursive: true })
 
     core.info('start download')
     await toolCache.downloadTool(
@@ -29,7 +30,7 @@ async function run(): Promise<void> {
       bundleToolPath,
       `
       #!/bin/bash
-      java -jar ${downloadJarPath} "$@"
+      java -jar "${downloadJarPath}" "$@"
     `
     )
     await fs.chmod(bundleToolPath, '755')
