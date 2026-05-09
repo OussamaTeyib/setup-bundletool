@@ -10,17 +10,18 @@ This action provides the following functionality for GitHub Actions users:
 See [action.yml](action.yml)
 
 **Basic:**
+
 ```yaml
 steps:
-  - uses: actions/checkout@v3
-    
+  - uses: actions/checkout@v6
+
   # bundletool requires java
   - name: Setup JDK 17
-    uses: actions/setup-java@v3
+    uses: actions/setup-java@v5
     with:
       java-version: 17
       distribution: temurin
-      
+
   - name: Setup bundletool
     uses: amyu/setup-bundletool@v1
 
