@@ -50,7 +50,8 @@ const os_1 = __importDefault(__nccwpck_require__(2037));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const downloadVersion = '1.15.1/bundletool-all-1.15.1.jar';
+            const version = core.getInput('version');
+            const downloadVersion = `${version}/bundletool-all-${version}.jar`;
             const downloadDir = path_1.default.join(os_1.default.homedir(), '.bundletool');
             const downloadJarPath = path_1.default.join(downloadDir, downloadVersion.split('/')[1]);
             const bundleToolPath = path_1.default.join(downloadDir, 'bundletool');
@@ -61,7 +62,7 @@ function run() {
             core.info('start create script');
             yield promises_1.default.writeFile(bundleToolPath, `
       #!/bin/bash
-      java -jar ${downloadJarPath} "$@"
+      java -jar "${downloadJarPath}" "$@"
     `);
             yield promises_1.default.chmod(bundleToolPath, '755');
             core.info('end create script');
