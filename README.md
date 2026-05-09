@@ -31,10 +31,10 @@ steps:
 **With specific version:**
 ```yaml
 steps:
-  - uses: actions/checkout@v3
+  - uses: actions/checkout@v6
     
   - name: Setup JDK 17
-    uses: actions/setup-java@v3
+    uses: actions/setup-java@v5
     with:
       java-version: 17
       distribution: temurin
