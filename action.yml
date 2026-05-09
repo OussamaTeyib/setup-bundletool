@@ -6,7 +6,7 @@ inputs:
   version:
     description: 'Bundletool version'
     required: false
-    default: '1.15.1'
+    default: '1.18.3'
 
 runs:
   using: 'node16'

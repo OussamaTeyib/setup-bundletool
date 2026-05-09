@@ -55,7 +55,7 @@ function run() {
             const downloadDir = path_1.default.join(os_1.default.homedir(), '.bundletool');
             const downloadJarPath = path_1.default.join(downloadDir, downloadVersion.split('/')[1]);
             const bundleToolPath = path_1.default.join(downloadDir, 'bundletool');
-            yield promises_1.default.mkdir(downloadDir);
+            yield promises_1.default.mkdir(downloadDir, { recursive: true });
             core.info('start download');
             yield toolCache.downloadTool(`https://github.com/google/bundletool/releases/download/${downloadVersion}`, downloadJarPath);
             core.info('end download');
