@@ -1,6 +1,13 @@
 name: 'setup bundletool'
 description: 'setup bundletool of android'
 author: 'amyu'
+
+inputs:
+  version:
+    description: 'Bundletool version'
+    required: false
+    default: '1.18.3'
+
 runs:
   using: 'node24'
   main: 'dist/index.js'

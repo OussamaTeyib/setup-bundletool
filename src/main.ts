@@ -6,13 +6,15 @@ import os from 'os'
 
 async function run(): Promise<void> {
   try {
-    const downloadVersion = '1.18.3/bundletool-all-1.18.3.jar'
+    const version = core.getInput('version')
+    const downloadVersion = `${version}/bundletool-all-${version}.jar`
 
     const downloadDir = path.join(os.homedir(), '.bundletool')
     const downloadJarPath = path.join(
       downloadDir,
       downloadVersion.split('/')[1]
     )
+
     const bundleToolPath = path.join(
       downloadDir,
       process.platform === 'win32' ? 'bundletool.cmd' : 'bundletool'

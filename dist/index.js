@@ -34703,7 +34703,8 @@ var promises_default = /*#__PURE__*/__nccwpck_require__.n(promises_namespaceObje
 
 async function run() {
     try {
-        const downloadVersion = '1.18.3/bundletool-all-1.18.3.jar';
+        const version = getInput('version');
+        const downloadVersion = `${version}/bundletool-all-${version}.jar`;
         const downloadDir = external_path_default().join(external_os_default().homedir(), '.bundletool');
         const downloadJarPath = external_path_default().join(downloadDir, downloadVersion.split('/')[1]);
         const bundleToolPath = external_path_default().join(downloadDir, process.platform === 'win32' ? 'bundletool.cmd' : 'bundletool');
