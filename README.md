@@ -23,24 +23,25 @@ steps:
       distribution: temurin
 
   - name: Setup bundletool
-    uses: amyu/setup-bundletool@v1
+    uses: amyu/setup-bundletool@v1.1
 
   - run: bundletool help
 ```
 
 **With specific version:**
+
 ```yaml
 steps:
   - uses: actions/checkout@v6
-    
+
   - name: Setup JDK 17
     uses: actions/setup-java@v5
     with:
       java-version: 17
       distribution: temurin
-      
+
   - name: Setup bundletool
-    uses: amyu/setup-bundletool@v1
+    uses: amyu/setup-bundletool@v1.1
     with:
       version: 1.18.3
 
