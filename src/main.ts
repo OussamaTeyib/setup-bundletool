@@ -4,9 +4,45 @@ import fs from 'fs/promises'
 import path from 'path'
 import os from 'os'
 
+// Fetch the latest release metadata from GitHub
+async function getLatestVersion(): Promise<string> {
+  const response = await fetch(
+    'https://api.github.com/repos/google/bundletool/releases/latest',
+    {
+      headers: {
+        accept: 'application/vnd.github+json',
+        'user-agent': 'setup-bundletool-action'
+      }
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch latest release: ${response.status} ${response.statusText}`
+    )
+  }
+
+  const data = (await response.json()) as {tag_name?: string}
+  if (!data.tag_name) {
+    throw new Error(
+      'Unable to determine latest release tag from GitHub response'
+    )
+  }
+
+  return data.tag_name
+}
+
+// Main action entry point
 async function run(): Promise<void> {
   try {
-    const version = core.getInput('version')
+    let version = core.getInput('version')
+
+    if (!version) {
+      core.info('Fetching latest bundletool release from GitHub…')
+      version = await getLatestVersion()
+      core.info(`Using latest version: ${version}`)
+    }
+
     const downloadVersion = `${version}/bundletool-all-${version}.jar`
 
     const downloadDir = path.join(os.homedir(), '.bundletool')
