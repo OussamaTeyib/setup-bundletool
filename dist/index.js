@@ -34703,20 +34703,16 @@ var promises_default = /*#__PURE__*/__nccwpck_require__.n(promises_namespaceObje
 
 // Fetch the latest release metadata from GitHub
 async function getLatestVersion() {
-    const response = await fetch('https://api.github.com/repos/google/bundletool/releases/latest', {
-        headers: {
-            accept: 'application/vnd.github+json',
-            'user-agent': 'setup-bundletool-action'
-        }
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to fetch latest release: ${response.status} ${response.statusText}`);
+    const response = await fetch('https://github.com/google/bundletool/releases/latest', { redirect: 'manual' });
+    const location = response.headers.get('location');
+    if (!location) {
+        throw new Error('Unable to determine latest release location from GitHub response');
     }
-    const data = (await response.json());
-    if (!data.tag_name) {
-        throw new Error('Unable to determine latest release tag from GitHub response');
+    const tag = location.split('/').pop();
+    if (!tag) {
+        throw new Error('Unable to extract version tag from GitHub redirect location');
     }
-    return data.tag_name;
+    return tag;
 }
 // Main action entry point
 async function run() {

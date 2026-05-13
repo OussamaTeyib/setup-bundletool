@@ -7,29 +7,27 @@ import os from 'os'
 // Fetch the latest release metadata from GitHub
 async function getLatestVersion(): Promise<string> {
   const response = await fetch(
-    'https://api.github.com/repos/google/bundletool/releases/latest',
-    {
-      headers: {
-        accept: 'application/vnd.github+json',
-        'user-agent': 'setup-bundletool-action'
-      }
-    }
+    'https://github.com/google/bundletool/releases/latest',
+    {redirect: 'manual'}
   )
 
-  if (!response.ok) {
+  const location = response.headers.get('location')
+
+  if (!location) {
     throw new Error(
-      `Failed to fetch latest release: ${response.status} ${response.statusText}`
+      'Unable to determine latest release location from GitHub response'
     )
   }
 
-  const data = (await response.json()) as {tag_name?: string}
-  if (!data.tag_name) {
+  const tag = location.split('/').pop()
+
+  if (!tag) {
     throw new Error(
-      'Unable to determine latest release tag from GitHub response'
+      'Unable to extract version tag from GitHub redirect location'
     )
   }
 
-  return data.tag_name
+  return tag
 }
 
 // Main action entry point
